@@ -1,8 +1,8 @@
-package rajouai.adil.reservationplatform.services;
+package rajouai.adil.reservationplatform.service;
 
 import org.springframework.stereotype.Service;
-import rajouai.adil.reservationplatform.entities.Product;
-import rajouai.adil.reservationplatform.repositories.ProductRepository;
+import rajouai.adil.reservationplatform.model.Product;
+import rajouai.adil.reservationplatform.repository.ProductRepository;
 
 import java.util.List;
 

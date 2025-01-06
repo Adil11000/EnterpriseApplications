@@ -1,7 +1,7 @@
-package rajouai.adil.reservationplatform.repositories;
+package rajouai.adil.reservationplatform.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import rajouai.adil.reservationplatform.entities.Cart;
+import rajouai.adil.reservationplatform.model.Cart;
 
 import java.util.Optional;
 

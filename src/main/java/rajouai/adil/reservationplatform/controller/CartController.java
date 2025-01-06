@@ -1,12 +1,12 @@
-package rajouai.adil.reservationplatform.controllers;
+package rajouai.adil.reservationplatform.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import rajouai.adil.reservationplatform.entities.Cart;
-import rajouai.adil.reservationplatform.services.CartService;
+import rajouai.adil.reservationplatform.model.Cart;
+import rajouai.adil.reservationplatform.service.CartService;
 
 @RestController
 @RequestMapping("/api/cart")

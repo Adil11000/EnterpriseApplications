@@ -1,11 +1,11 @@
-package rajouai.adil.reservationplatform.services;
+package rajouai.adil.reservationplatform.service;
 
 import org.springframework.stereotype.Service;
-import rajouai.adil.reservationplatform.entities.Cart;
-import rajouai.adil.reservationplatform.entities.CartItem;
-import rajouai.adil.reservationplatform.entities.Product;
-import rajouai.adil.reservationplatform.repositories.CartRepository;
-import rajouai.adil.reservationplatform.repositories.ProductRepository;
+import rajouai.adil.reservationplatform.model.Cart;
+import rajouai.adil.reservationplatform.model.CartItem;
+import rajouai.adil.reservationplatform.model.Product;
+import rajouai.adil.reservationplatform.repository.CartRepository;
+import rajouai.adil.reservationplatform.repository.ProductRepository;
 
 @Service
 public class CartService {

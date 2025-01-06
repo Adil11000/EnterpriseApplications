@@ -1,4 +1,4 @@
-package rajouai.adil.reservationplatform.entities;
+package rajouai.adil.reservationplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
