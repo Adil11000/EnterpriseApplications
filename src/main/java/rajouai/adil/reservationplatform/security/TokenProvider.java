@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import rajouai.adil.reservationplatform.model.User;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;

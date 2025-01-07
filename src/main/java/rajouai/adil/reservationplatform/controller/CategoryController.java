@@ -1,11 +1,9 @@
 package rajouai.adil.reservationplatform.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rajouai.adil.reservationplatform.model.SlimCategoryProjection;
-import rajouai.adil.reservationplatform.model.Product;
 import rajouai.adil.reservationplatform.service.CategoryService;
 
 import java.util.List;
@@ -23,10 +21,5 @@ public class CategoryController {
     @GetMapping
     public List<SlimCategoryProjection> getAllCategories() {
         return categoryService.getAllCategories();
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public List<Product> getProductsByCategory(@PathVariable Long categoryId) {
-        return categoryService.getProductsByCategory(categoryId);
     }
 }
