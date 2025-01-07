@@ -2,7 +2,7 @@ package rajouai.adil.reservationplatform.model;
 
 import jakarta.persistence.*;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +18,26 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> items;
 
-    public Collection<CartItem> getItems() {
-        return items;
+    public List<CartItem> getItems() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+        return new ArrayList<>(items);
+    }
+
+    public void addItem(CartItem item) {
+        items.add(item);
+    }
+
+    public void clearItems() {
+        items.clear();
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

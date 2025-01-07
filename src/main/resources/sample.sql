@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS reservation_item;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS category;
@@ -31,8 +35,44 @@ VALUES ('Lamp A', 'Bright lamp', 50.0, 1),
 
 CREATE TABLE user
 (
-    id       SERIAL PRIMARY KEY,
-    email    VARCHAR(255) NOT NULL,
+    id              SERIAL PRIMARY KEY,
+    email           VARCHAR(255) NOT NULL,
     hashed_password VARCHAR(255) NOT NULL,
-    role     VARCHAR(255) NOT NULL
+    role            VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE cart
+(
+    id      SERIAL PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE TABLE cart_item
+(
+    id         SERIAL PRIMARY KEY,
+    product_id BIGINT UNSIGNED NOT NULL,
+    quantity   INT UNSIGNED    NOT NULL,
+    cart_id    BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (cart_id) REFERENCES cart (id)
+);
+
+CREATE TABLE reservation
+(
+    id             SERIAL PRIMARY KEY,
+    user_id        BIGINT UNSIGNED NOT NULL,
+    reserved_until DATETIME        NOT NULL,
+    returned       BOOLEAN         NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE TABLE reservation_item
+(
+    id             SERIAL PRIMARY KEY,
+    reservation_id BIGINT UNSIGNED NOT NULL,
+    product_id     BIGINT UNSIGNED NOT NULL,
+    quantity       INT UNSIGNED    NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservation (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
 );

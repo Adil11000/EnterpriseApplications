@@ -16,6 +16,6 @@ public class GlobalExceptionHandler {
         ex.printStackTrace(); // TODO: Log the exception
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorDto("Internal server error"));
+                .body(new ErrorDto(ex.getMessage()));
     }
 }

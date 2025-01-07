@@ -27,6 +27,10 @@ public class User implements UserDetails {
         this.role = UserRole.USER;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == UserRole.ADMIN) {
@@ -59,5 +63,9 @@ public class User implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setId(Long userId) {
+
     }
 }

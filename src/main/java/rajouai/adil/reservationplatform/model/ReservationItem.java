@@ -3,7 +3,7 @@ package rajouai.adil.reservationplatform.model;
 import jakarta.persistence.*;
 
 @Entity
-public class CartItem {
+public class ReservationItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -12,11 +12,11 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int quantity;
-
     @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
+
+    private int quantity;
 
     public void setProduct(Product product) {
         this.product = product;
@@ -24,10 +24,6 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
     public Long getId() {
@@ -40,5 +36,9 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 }
