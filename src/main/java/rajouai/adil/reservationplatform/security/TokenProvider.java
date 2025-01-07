@@ -40,8 +40,11 @@ public class TokenProvider {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec rsaPrivateKey =
                 new PKCS8EncodedKeySpec(privateKeyBytes);
-        X509EncodedKeySpec rsaPublicKey = new X509EncodedKeySpec(publicKeyBytes);
-        algo = Algorithm.RSA256((RSAPublicKey) keyFactory.generatePublic(rsaPublicKey), (RSAPrivateKey) keyFactory.generatePrivate(rsaPrivateKey));
+        X509EncodedKeySpec rsaPublicKey = new X509EncodedKeySpec(
+                publicKeyBytes);
+        algo = Algorithm.RSA256(
+                (RSAPublicKey) keyFactory.generatePublic(rsaPublicKey),
+                (RSAPrivateKey) keyFactory.generatePrivate(rsaPrivateKey));
         verifier = JWT
                 .require(algo)
                 .build();
@@ -56,12 +59,17 @@ public class TokenProvider {
     }
 
     public String validateToken(String token) {
-        return verifier
-                .verify(token)
-                .getSubject();
+        try {
+            return verifier
+                    .verify(token)
+                    .getSubject();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + (long) DEFAULT_EXPIRATION_DURATION_HOURS * 60 * 60 * 1000);
+        return new Date(
+                System.currentTimeMillis() + (long) DEFAULT_EXPIRATION_DURATION_HOURS * 60 * 60 * 1000);
     }
 }

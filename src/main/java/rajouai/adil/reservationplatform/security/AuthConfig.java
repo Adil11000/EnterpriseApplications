@@ -22,15 +22,17 @@ public class AuthConfig {
     SecurityFilter securityFilter;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/*")
+                        // Permit access to static resources, frontend, and auth
+                        .requestMatchers(UrlConstants.AUTH_WHITELIST_ARRAY)
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/products")
-                        .hasRole("USER")
+                        // Require authentication for all other requests
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(securityFilter,
@@ -39,7 +41,8 @@ public class AuthConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
