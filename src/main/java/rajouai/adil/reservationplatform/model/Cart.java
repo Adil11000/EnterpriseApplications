@@ -1,43 +1,62 @@
 package rajouai.adil.reservationplatform.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-@Entity
-public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Cart implements Serializable  {
+    private final List<CartItem> items;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> items;
+    public Cart() {
+        items = new ArrayList<>();
+    }
 
     public List<CartItem> getItems() {
-        if (items == null) {
-            items = new ArrayList<>();
+        return items;
+    }
+
+    public Cart addItem(CartItem item) {
+        CartItem existing = items
+                .stream()
+                .filter(i -> i
+                        .getProduct()
+                        .getId()
+                        .equals(item
+                                .getProduct()
+                                .getId()))
+                .findFirst()
+                .orElse(null);
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + item.getQuantity());
+        } else {
+            items.add(item);
         }
-        return new ArrayList<>(items);
+        return this;
     }
 
-    public void addItem(CartItem item) {
-        items.add(item);
+    public Cart removeItem(CartItem item) {
+        CartItem existing = items
+                .stream()
+                .filter(i -> i
+                        .getProduct()
+                        .getId()
+                        .equals(item
+                                .getProduct()
+                                .getId()))
+                .findFirst()
+                .orElse(null);
+        if (existing != null) {
+            if (existing.getQuantity() > item.getQuantity()) {
+                existing.setQuantity(existing.getQuantity() - item.getQuantity());
+            } else {
+                items.remove(existing);
+            }
+        }
+        return this;
     }
 
-    public void clearItems() {
-        items.clear();
-    }
-
-    public void setItems(List<CartItem> items) {
-        this.items = items;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

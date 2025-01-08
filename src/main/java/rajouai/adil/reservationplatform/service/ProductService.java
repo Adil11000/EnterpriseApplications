@@ -1,5 +1,6 @@
 package rajouai.adil.reservationplatform.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rajouai.adil.reservationplatform.model.Category;
@@ -17,7 +18,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> listProductUsingExample(Pageable pageable,
+    public Page<Product> listProductUsingExample(Pageable pageable,
                                                  Optional<Category> category,
                                                  String query) {
         return productRepository.findByCategoryAndNameOrDescription(category

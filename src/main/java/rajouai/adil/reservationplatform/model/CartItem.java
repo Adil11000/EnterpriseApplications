@@ -1,22 +1,14 @@
 package rajouai.adil.reservationplatform.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.parameters.P;
 
-@Entity
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
-
     private int quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
 
     public void setProduct(Product product) {
         this.product = product;
@@ -24,10 +16,6 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
     public Long getId() {

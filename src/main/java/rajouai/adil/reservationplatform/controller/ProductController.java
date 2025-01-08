@@ -2,6 +2,7 @@ package rajouai.adil.reservationplatform.controller;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts(
+    public Page<Product> getAllProducts(
             @RequestParam() Optional<String> query,
             @RequestParam() Optional<Category> category,
             @RequestParam(defaultValue = "1") @Min(1) Integer page,

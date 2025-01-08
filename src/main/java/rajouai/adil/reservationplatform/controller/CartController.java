@@ -1,6 +1,9 @@
 package rajouai.adil.reservationplatform.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,17 +25,24 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<Cart> getCart() {
+    public ResponseEntity<Cart> getCart(
+            HttpServletRequest request
+    ) {
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Cart cart = cartService.getCart(user);
+        HttpSession session = request.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new Cart();
+        }
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/add")
     public ResponseEntity<Cart> addToCart(
+            HttpServletRequest request,
             @RequestBody @NotNull
             CartItemDto body
     ) {
@@ -40,36 +50,41 @@ public class CartController {
                 .getContext()
                 .getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Cart cart = cartService.addToCart(user, body.productId(),
-                body.quantity());
+        HttpSession session = request.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        cart = cartService.addToCart(cart, body.productId(), body.quantity());
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/remove")
     public ResponseEntity<Cart> removeFromCart(
+            HttpServletRequest request,
             @RequestBody
             @NotNull
             CartItemDto body
     ) {
-        Authentication authentication = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        Cart cart = cartService.removeFromCart(user, body.productId(),
+        HttpSession session = request.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        cart = cartService.removeFromCart(cart, body.productId(),
                 body.quantity());
+        session.setAttribute("cart", cart);
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/checkout")
     public ResponseEntity<Reservation> checkout(
+            HttpServletRequest request,
             @RequestBody CheckoutDto body
     ) {
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Reservation res = cartService.checkoutCart(user,
+        HttpSession session = request.getSession();
+        Cart cart = (Cart) session.getAttribute("cart");
+        Reservation res = cartService.checkoutCart(user, cart,
                 body.reservedUntil());
+        session.setAttribute("cart", new Cart());
         return ResponseEntity.ok(res);
     }
 }

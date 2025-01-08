@@ -1,5 +1,6 @@
 package rajouai.adil.reservationplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -13,7 +14,7 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Product> products;
 
     public Long getId() {

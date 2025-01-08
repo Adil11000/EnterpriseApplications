@@ -57,10 +57,6 @@ public class User implements UserDetails {
         this.hashedPassword = hashedPassword;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
     public String getEmail() {
         return email;
     }
