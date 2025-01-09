@@ -1,4 +1,4 @@
-import { Select as SelectPrimitive } from "bits-ui";
+import {Select as SelectPrimitive} from "bits-ui";
 
 import GroupHeading from "./select-group-heading.svelte";
 import Item from "./select-item.svelte";

@@ -43,14 +43,14 @@
         name: string;
     }
 
-    interface ProductPage {
+    interface ProductResponse {
         content: Product[];
-        totalPages: number;
-        totalElements: number;
-        first: boolean;
-        last: boolean;
+        page: Page;
+    }
+
+    interface Page {
         number: number;
-        empty: boolean;
+        totalElements: number;
     }
 
     interface Product {
@@ -65,10 +65,6 @@
         quantity: number;
     }
 
-    interface Cart {
-        items: CartItem[];
-    }
-
     interface Reservation {
         id: number;
         returned: boolean;
@@ -76,10 +72,10 @@
         items: CartItem[];
     }
 
-    const pageSize = 20;
+    const pageSize = 7;
     let page = $state(1);
     let sortDirection: "ASC" | "DESC" = $state("ASC");
-    let sortField: "name" | "price" = $state("name");
+    let sortBy: "name" | "price" = $state("name");
     let searchQuery = $state("");
     let searchCategory: number | null = $state(null);
 
@@ -89,23 +85,27 @@
     });
 
     function regenerateQuery() {
-        fullQuery = `?page=${page}&size=${pageSize}&sortField=${sortField}&sortDirection=${sortDirection}${searchQuery ? `&query=${searchQuery}` : ""}${
+        fullQuery = `?page=${page}&size=${pageSize}&sortBy=${sortBy}&sortDirection=${sortDirection}${searchQuery ? `&query=${searchQuery}` : ""}${
             searchCategory ? `&category=${searchCategory}` : ""
         }`;
     }
 
     let categories: Category[] = $state([]);
-    let productsPage: ProductPage = $state({
+    let productsPage: ProductResponse = $state({
         content: [],
-        totalPages: 0,
-        totalElements: 0,
-        first: false,
-        last: false,
-        number: 0,
-        empty: true,
+        page: {
+            number: 0,
+            totalElements: 0,
+        },
     });
     let cartItems: CartItem[] = $state([]);
     let reservations: Reservation[] = $state([]);
+
+    async function getReservations(): Promise<Reservation[]> {
+        return await fetchwrap("api/v1/user/reservations", "GET", null).then(
+            (res) => res.json(),
+        );
+    }
 
     onMount(async () => {
         categories = await fetchwrap("api/v1/categories", "GET", null).then(
@@ -120,11 +120,7 @@
             (res) => res.json(),
         );
         cartItems = cart.items;
-        reservations = await fetchwrap(
-            "api/v1/user/reservations",
-            "GET",
-            null,
-        ).then((res) => res.json());
+        reservations = await getReservations();
     });
 
     async function addItemToCart(product: Product) {
@@ -143,8 +139,9 @@
         cartItems = cart.items;
     }
 
-    async function search(searchCategoryArg: number | null = searchCategory) {
+    async function search(searchCategoryArg: number | null = searchCategory, pageArg: number = page) {
         searchCategory = searchCategoryArg;
+        page = pageArg;
         regenerateQuery();
         productsPage = await fetchwrap(
             `api/v1/products${fullQuery}`,
@@ -171,6 +168,7 @@
         ).then((res) => res.json());
         cartItems = [];
         returnDate = undefined;
+        reservations = await getReservations();
     }
 
     async function returnReservation(reservation: Reservation) {
@@ -276,11 +274,11 @@
             <Select.Root
                 type="single"
                 onValueChange={(value) => {
-                    sortField = value;
+                    sortBy = value;
                     search();
                 }}
             >
-                <Select.Trigger>{sortField}</Select.Trigger>
+                <Select.Trigger>{sortBy}</Select.Trigger>
                 <Select.Content>
                     <Select.Item value="name">Name</Select.Item>
                     <Select.Item value="price">Price</Select.Item>
@@ -347,7 +345,7 @@
                 {/each}
             </Table.Body>
         </Table.Root>
-        <Pagination.Root count={productsPage.totalElements} perPage={pageSize}>
+        <Pagination.Root count={productsPage.page.totalElements} perPage={pageSize} onPageChange={(page) => search(null, page)}>
             {#snippet children({ pages, currentPage })}
                 <Pagination.Content>
                     <Pagination.Item>
